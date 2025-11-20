@@ -12,23 +12,26 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] private string goodTrigger = "spin";
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void OnEnable()
     {
         if (_net)
         {
-        _net.BadClick += OnBadClickEvent;
-        _net.BadTry += OnBadTryEvent;
-        _net.GoodClick += OnGoodClickEvent;
-        _net.AnimalsMoving += OnAnimalsMovingEvent;
-        _net.AnimalsChanged += OnAnimalsChangedEvent;
-        _net.Selected += OnSelectedEvent;
+            _net.BadClick += OnBadClick;
+            _net.AnimalsMoving += OnAnimalsMoving;
+            _net.Selected += OnSelected;
         }
 
         if (!_animator)
         {
-            _animator = GetComponent<Animator>();
+            Debug.LogError("_animator is nullref");
         }
 
+    }
+    private void OnDisable()
+    {
+        _net.BadClick -= OnBadClick;
+        _net.AnimalsMoving -= OnAnimalsMoving;
+        _net.Selected -= OnSelected;
     }
 
     // Update is called once per frame
@@ -36,32 +39,17 @@ public class NewBehaviourScript : MonoBehaviour
     {
         
     }
-    void OnSelectedEvent()
+
+    private void OnSelected()
     {
         _animator.SetTrigger(selectedTrigger);
     }
-    void OnBadClickEvent() 
+    private void OnBadClick() 
     {
         _animator.SetTrigger(badTrigger);
     }
-    void OnAnimalsMovingEvent()
+    private void OnAnimalsMoving()
     {
         _animator.SetTrigger(goodTrigger);
-    }
-
-    void OnBadTryEvent()
-    {
-
-    }
-
-    void OnGoodClickEvent() 
-    {
-    
-    }
-
-
-    void OnAnimalsChangedEvent(int number)
-    {
-
     }
 }
